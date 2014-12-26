@@ -103,14 +103,17 @@
         "RouteTableId" : { "Ref" : "PrivateRouteTable" }
       }
     },
+    
+    "InternetGateway" : {
+      "Type" : "AWS::EC2::InternetGateway"
+    }, 
 
     "PrivateRoute" : {
       "Type" : "AWS::EC2::Route",
-      "DependsOn" : "VPNGatewayAttachment",
       "Properties" : {
         "RouteTableId" : { "Ref" : "PrivateRouteTable" },
         "DestinationCidrBlock" : "0.0.0.0/0",
-        "GatewayId" : { "Ref" : "VPNGateway" }
+        "GatewayId" : { "Ref" : "InternetGateway" }
       }
     },
 
@@ -165,8 +168,6 @@
         "InstanceId" : { "Ref" : "BitTorrentSyncInstance" },
         "Domain" : "vpc"
       }
-    }
-    
     }, 
     
     "BitTorrentSyncInstance" : {
