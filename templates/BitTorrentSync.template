@@ -5,7 +5,7 @@
 
   "Parameters" : {
     "InstanceType" : {
-      "Description" : "EC2 instance type",
+      "Description" : "The EC2 instance type",
       "Type" : "String",
       "Default" : "t2.small",
       "AllowedValues" : [ "t1.micro","t2.micro","t2.small","t2.medium","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
@@ -13,7 +13,7 @@
     },
     
     "KeyName": {
-      "Description" : "Name of an existing EC2 keypair for this instance",
+      "Description" : "The name of an existing EC2 keypair for this instance",
       "Type": "String",
       "Default": "BitTorrentSync",
       "MinLength": "1",
@@ -24,20 +24,29 @@
     
     "VPCCIDR" : {
       "Type" : "String",
-      "Description" : "IP Address range for the VPC",
+      "Description" : "The IP Address range for the VPC",
       "MinLength": "9",
       "MaxLength": "18",
-      "Default": "10.1.0.0/24",
+      "Default": "192.168.10.0/24",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
       "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
     },
 
     "SubnetCIDR" : {
       "Type" : "String",
-      "Description" : "IP Address range for the VPC subnet",
+      "Description" : "The IP address range for the VPC subnet",
       "MinLength": "9",
       "MaxLength": "18",
-      "Default": "10.1.0.0/24",
+      "Default": "192.168.10.0/24",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
+    },
+    
+    "AllowedSubnet" : {
+      "Type" : "String",
+      "Description" : "The subnet that is allowed to access the web server interface, usually your own public IP",
+      "MinLength": "9",
+      "MaxLength": "18",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
       "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
     }
@@ -45,7 +54,7 @@
   
   "Mappings": {
     "RegionMap": {
-      "us-east-1": { "AMI" : "ami-08842d60" }
+      "us-east-1": { "AMI" : "?" }
     }
   },
   
@@ -59,7 +68,7 @@
         "CidrBlock" : { "Ref" : "VPCCIDR" },
         "Tags" : [
           { "Key" : "Application", "Value" : { "Ref" : "AWS::StackName" } },
-          { "Key" : "Network", "Value" : "VPN Connected VPC" }
+          { "Key" : "Network", "Value" : "VPC" }
         ]
       }
     },
@@ -71,7 +80,7 @@
         "CidrBlock" : { "Ref" : "SubnetCIDR" },
         "Tags" : [
           { "Key" : "Application", "Value" : { "Ref" : "AWS::StackName" } },
-          { "Key" : "Network", "Value" : "VPN Connected Subnet" }
+          { "Key" : "Network", "Value" : "VPC Subnet" }
         ]
       }
     },
@@ -82,7 +91,7 @@
         "VpcId" : { "Ref" : "VPC" },
         "Tags" : [
           { "Key" : "Application", "Value" : { "Ref" : "AWS::StackName" } },
-          { "Key" : "Network", "Value" : "VPN Connected Subnet" }
+          { "Key" : "Network", "Value" : "VPC Subnet" }
         ]
       }
     },
@@ -150,6 +159,16 @@
       }
     },
     
+    "PublicIP" : {
+      "Type" : "AWS::EC2::EIP",  
+      "Properties" : {
+        "InstanceId" : { "Ref" : "BitTorrentSyncInstance" },
+        "Domain" : "vpc"
+      }
+    }
+    
+    }, 
+    
     "BitTorrentSyncInstance" : {
       "Type" : "AWS::EC2::Instance",
       "Metadata" : {
@@ -159,7 +178,7 @@
             "files" : {
 
                "/opt/btsync.tar.gz" : {
-                "source"  : "<URL here>",
+                "source"  : "http://download.getsyncapp.com/endpoint/btsync/os/linux-x64/track/stable",
                 "mode"    : "000700",
                 "owner"   : "root",
                 "group"   : "root"
@@ -189,18 +208,11 @@
             },
             
             "commands" : {
-              "install-btsync" : {
+              "1-install-btsync" : {
                 "command" : "gzip -d /opt/btsync.tar.gz; tar -xvf btsync.tar"
               },
-              "run-btsync" : {
+              "2-run-btsync" : {
                 "command" : "./btsync --webui.listen 0.0.0.0:8888"
-              }
-            }, 
-
-            "services" : {
-              "sysvinit" : {
-                "httpd"    : { "enabled" : "true", "ensureRunning" : "true" },
-                "sendmail" : { "enabled" : "false", "ensureRunning" : "false" }
               }
             }
           }
@@ -212,7 +224,7 @@
         "InstanceType" : { "Ref" : "InstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} } ],
-        "PrivateIpAddress": "10.1.0.10",
+        "PrivateIpAddress": "192.168.10.10",
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
           "yum update -y aws-cfn-bootstrap\n",
