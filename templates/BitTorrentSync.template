@@ -261,7 +261,7 @@
         "KeyName" : { "Ref" : "KeyName" },
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} } ],
         "PrivateIpAddress": "192.168.10.10",
-        "SecurityGroup" : { "Ref": "InstanceSecurityGroup" }, 
+        "SecurityGroupIds": [ { "Ref": "InstanceSecurityGroup" } ], 
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
           "yum update -y aws-cfn-bootstrap\n",
