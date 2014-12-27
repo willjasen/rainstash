@@ -220,6 +220,26 @@
                 "group"   : "root"
               },
               
+              "/etc/init.d/btsync" : {
+                "content" : { "Fn::Join" : ["", [
+                  "#!/bin/sh\n",
+                  "case \"$1\" in\n",
+                  "start)\n",
+                  "  /opt/btsync --webui.listen 0.0.0.0:8888\n",
+                  ";;\n",
+                  "stop)\n",
+                  "  killall btsync\n",
+                  ";;\n",
+                  "*)\n",
+                  "  exit 1\n",
+                  "esac\n",
+                  "exit 0"
+                ]]},
+                "mode"    : "000700",
+                "owner"   : "root",
+                "group"   : "root"
+              }, 
+              
               "/etc/cfn/cfn-hup.conf" : {
                 "content" : { "Fn::Join" : ["", [
                   "[main]\n",
@@ -244,17 +264,17 @@
             },
             
             "commands" : {
-              "1-update-the-system" : {
-                "command" : "yum update"
-              }, 
-              "2-unzip-btsync" : {
+              "1-unzip-btsync" : {
                 "command" : "gzip -d /opt/btsync.tar.gz"
               },
-              "3-extract-btsync" : {
+              "2-extract-btsync" : {
                 "command" : "tar -xvf /opt/btsync.tar -C /opt"
               },
-              "4-run-btsync" : {
-                "command" : "/opt/btsync --webui.listen 0.0.0.0:8888"
+              "3-run-btsync" : {
+                "command" : "/etc/init.d/btsync start"
+              },
+              "4-update-the-system" : {
+                "command" : "yum -y update"
               }
             }
           }
@@ -314,6 +334,10 @@
     "PrivateSubnet" : {
       "Description" : "SubnetId of the VPN connected subnet",
       "Value" :  { "Ref" : "PrivateSubnet" }
+    },
+    "PublicIP" : {
+      "Description" : "Public IP of the instance",
+      "Value" : { "Ref" : "PublicIP" }
     }
   }
 }
