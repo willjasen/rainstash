@@ -248,7 +248,7 @@
                 "command" : "gzip -d /opt/btsync.tar.gz"
               },
               "2-extract-btsync" : {
-                "command" : "tar -xvf /opt/btsync.tar"
+                "command" : "tar -xvf /opt/btsync.tar -C /opt"
               },
               "3-run-btsync" : {
                 "command" : "/opt/btsync --webui.listen 0.0.0.0:8888"
