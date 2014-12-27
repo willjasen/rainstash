@@ -244,11 +244,14 @@
             },
             
             "commands" : {
-              "1-install-btsync" : {
-                "command" : "gzip -d /opt/btsync.tar.gz; tar -xvf btsync.tar"
+              "1-unzip-btsync" : {
+                "command" : "gzip -d /opt/btsync.tar.gz"
               },
-              "2-run-btsync" : {
-                "command" : "./btsync --webui.listen 0.0.0.0:8888"
+              "2-extract-btsync" : {
+                "command" : "tar -xvf btsync.tar"
+              },
+              "3-run-btsync" : {
+                "command" : "/opt/btsync --webui.listen 0.0.0.0:8888"
               }
             }
           }
