@@ -183,8 +183,8 @@
          },
          {
             "IpProtocol" : "tcp",
-            "FromPort" : "8888",
-            "ToPort" : "8888",
+            "FromPort" : "80",
+            "ToPort" : "80",
             "CidrIp" : { "Ref" : "AllowedSubnet" }
          }
          ],
@@ -220,12 +220,27 @@
                 "group"   : "root"
               },
               
+              "/opt/btsync.conf" : {
+                "content" : { "Fn::Join" : ["", [
+                  "{\n",
+                    "  \"device_name\": \"My Sync Device\",\n",
+                    "  \"webui\": {\n",
+                    "    \"listen\" : \"0.0.0.0:80\"\n",
+                    "  }\n",
+                    "/* Advanced preferences can be added to config file. Info is available at http://sync-help.bittorrent.com */\n",
+                  "}\n" 
+                ]]},
+                "mode"    : "000700",
+                "owner"   : "root",
+                "group"   : "root"
+              }, 
+              
               "/etc/init.d/btsync" : {
                 "content" : { "Fn::Join" : ["", [
                   "#!/bin/sh\n",
                   "case \"$1\" in\n",
                   "start)\n",
-                  "  /opt/btsync --webui.listen 0.0.0.0:8888\n",
+                  "  /opt/btsync --config /opt/btsync.conf\n",
                   ";;\n",
                   "stop)\n",
                   "  killall btsync\n",
