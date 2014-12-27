@@ -68,7 +68,7 @@
         "CidrBlock" : { "Ref" : "VPCCIDR" },
         "Tags" : [
           { "Key" : "Application", "Value" : { "Ref" : "AWS::StackName" } },
-          { "Key" : "Network", "Value" : "VPC" }
+          { "Key" : "Network", "Value" : "BitTorrentSyncVPC" }
         ]
       }
     },
@@ -76,7 +76,7 @@
     "PrivateSubnet" : {
       "Type" : "AWS::EC2::Subnet",
       "Properties" : {
-        "VpcId" : { "Ref" : "VPC" },
+        "VpcId" : { "Ref" : "BitTorrentSyncVPC" },
         "CidrBlock" : { "Ref" : "SubnetCIDR" },
         "Tags" : [
           { "Key" : "Application", "Value" : { "Ref" : "AWS::StackName" } },
@@ -88,7 +88,7 @@
     "PrivateRouteTable" : {
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
-        "VpcId" : { "Ref" : "VPC" },
+        "VpcId" : { "Ref" : "BitTorrentSyncVPC" },
         "Tags" : [
           { "Key" : "Application", "Value" : { "Ref" : "AWS::StackName" } },
           { "Key" : "Network", "Value" : "VPC Subnet" }
@@ -120,7 +120,7 @@
     "PrivateNetworkAcl" : {
       "Type" : "AWS::EC2::NetworkAcl",
       "Properties" : {
-        "VpcId" : { "Ref" : "VPC" },
+        "VpcId" : { "Ref" : "BitTorrentSyncVPC" },
         "Tags" : [
           { "Key" : "Application", "Value" : { "Ref" : "AWS::StackName" } },
           { "Key" : "Network", "Value" : "Private" }
@@ -287,7 +287,7 @@
   "Outputs" : {
     "VPCId" : {
       "Description" : "VPCId of the newly created VPC",
-      "Value" :  { "Ref" : "VPC" }
+      "Value" :  { "Ref" : "BitTorrentSyncVPC" }
     },
     "PrivateSubnet" : {
       "Description" : "SubnetId of the VPN connected subnet",
