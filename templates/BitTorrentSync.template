@@ -180,11 +180,18 @@
             "FromPort" : "22",
             "ToPort" : "22",
             "CidrIp" : { "Ref" : "AllowedSubnet" }
-         }],
+         },
+         {
+            "IpProtocol" : "tcp",
+            "FromPort" : "8888",
+            "ToPort" : "8888",
+            "CidrIp" : { "Ref" : "AllowedSubnet" }
+         }
+         ],
         "SecurityGroupEgress" : [{
-         "IpProtocol" : "tcp",
-         "FromPort" : "8888",
-         "ToPort" : "8888",
+         "IpProtocol" : "-1",
+         "FromPort" : "-1",
+         "ToPort" : "-1",
          "CidrIp" : { "Ref": "AllowedSubnet" }
         }]
       }
@@ -266,10 +273,10 @@
           "}\n",
 
           "# Install the simple web page\n",
-          "/opt/aws/bin/cfn-init -s ", { "Ref" : "AWS::StackId" }, " -r BitTorrentSyncInstance ",
+          "/opt/aws/bin/cfn-init -v -s ", { "Ref" : "AWS::StackId" }, " -r BitTorrentSyncInstance ",
           "         --region ", { "Ref" : "AWS::Region" }, " || error_exit 'Failed to run cfn-init'\n",
 
-          "# Start up the cfn-hup daemon to listen for changes to the Splunk instance metadata\n",
+          "# Start up the cfn-hup daemon to listen for changes to the BitTorrentSync instance metadata\n",
           "/opt/aws/bin/cfn-hup || error_exit 'Failed to start cfn-hup'\n",
 
           "# All done so signal success\n",
