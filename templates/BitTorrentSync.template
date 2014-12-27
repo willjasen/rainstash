@@ -106,7 +106,15 @@
     
     "InternetGateway" : {
       "Type" : "AWS::EC2::InternetGateway"
-    }, 
+    },
+    
+    "AttachInternetGateway" : {
+      "Type" : "AWS::EC2::VPCGatewayAttachment",
+      "Properties" : {
+        "VpcId" : { "Ref" : "BitTorrentSyncVPC" },
+        "InternetGatewayId" : { "Ref" : "InternetGateway" }
+      }
+    },
 
     "PrivateRoute" : {
       "Type" : "AWS::EC2::Route",
