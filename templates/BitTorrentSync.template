@@ -60,7 +60,7 @@
   
   "Resources" : {
 
-    "VPC" : {
+    "BitTorrentSyncVPC" : {
       "Type" : "AWS::EC2::VPC",
       "Properties" : {
         "EnableDnsSupport" : "true",
@@ -159,6 +159,26 @@
       "Properties" : {
         "SubnetId" : { "Ref" : "PrivateSubnet" },
         "NetworkAclId" : { "Ref" : "PrivateNetworkAcl" }
+      }
+    },
+    
+    "InstanceSecurityGroup" : {
+   	  "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Allow http to client host",
+        "VpcId" : {"Ref" : "BitTorrentSyncVPC"},
+        "SecurityGroupIngress" : [{
+            "IpProtocol" : "tcp",
+            "FromPort" : "22",
+            "ToPort" : "22",
+            "CidrIp" : { "Ref" : "AllowedSubnet" }
+         }],
+        "SecurityGroupEgress" : [{
+         "IpProtocol" : "tcp",
+         "FromPort" : "8888",
+         "ToPort" : "8888",
+         "CidrIp" : { "Ref": "AllowedSubnet" }
+        }]
       }
     },
     
