@@ -57,6 +57,12 @@
       "Description" : "Password used to generate a self-signed SSL certificate",
       "MinLength": "8",
       "ConstraintDescription": "Minimum length of 8 characters"
+    },
+    
+    "StorageNeededInGB" : {
+      "Type" : "String",
+      "Description" : "Amount of storage needed for BitTorrent Sync",
+      "Default": "1"
     }
     
   },
@@ -212,7 +218,25 @@
         "InstanceId" : { "Ref" : "BitTorrentSyncInstance" },
         "Domain" : "vpc"
       }
-    }, 
+    },
+    
+    "DataVolume" : {
+      "Type" : "AWS::EC2::Volume",
+      "Properties" : {
+        "Size" : { "Ref" : "StorageNeededInGB" },
+     	"VolumeType" : "gp2",
+        "AvailabilityZone" : { "Fn::GetAtt" : [ "BitTorrentSyncInstance", "AvailabilityZone" ] }
+      }
+    },
+    
+    "MountPoint" : {
+      "Type" : "AWS::EC2::VolumeAttachment",
+      "Properties" : {
+        "InstanceId" : { "Ref" : "BitTorrentSyncInstance" },
+        "VolumeId"  : { "Ref" : "DataVolume" },
+        "Device" : "/dev/xvdf"
+      }
+    },     
     
     "BitTorrentSyncInstance" : {
       "Type" : "AWS::EC2::Instance",
