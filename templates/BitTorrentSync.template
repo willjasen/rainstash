@@ -49,7 +49,16 @@
       "MaxLength": "18",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
       "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
+    },
+    
+    "SSLCertKeyPassword" : {
+      "Type" : "String",
+      "NoEcho": "true",
+      "Description" : "Password used to generate a self-signed SSL certificate",
+      "MinLength": "8",
+      "ConstraintDescription": "Minimum length of 8 characters"
     }
+    
   },
   
   "Mappings": {
@@ -183,8 +192,8 @@
          },
          {
             "IpProtocol" : "tcp",
-            "FromPort" : "80",
-            "ToPort" : "80",
+            "FromPort" : "443",
+            "ToPort" : "443",
             "CidrIp" : { "Ref" : "AllowedSubnet" }
          }
          ],
@@ -225,7 +234,10 @@
                   "{\n",
                     "  \"device_name\": \"My Sync Device\",\n",
                     "  \"webui\": {\n",
-                    "    \"listen\" : \"0.0.0.0:80\"\n",
+                    "    \"listen\" : \"0.0.0.0:443\",\n",
+                    "    \"force_https\" : true,\n",
+                    "    \"ssl_certificate\" : \"/opt/btsync.crt\",\n",
+                    "    \"ssl_private_key\" : \"/opt/btsync.key.plaintext\"\n",
                     "  }\n",
                     "/* Advanced preferences can be added to config file. Info is available at http://sync-help.bittorrent.com */\n",
                   "}\n" 
@@ -244,6 +256,10 @@
                   ";;\n",
                   "stop)\n",
                   "  killall btsync\n",
+                  ";;\n",
+                  "restart)\n",
+                  "  service btsync stop\n",
+                  "  service btsync start\n",
                   ";;\n",
                   "*)\n",
                   "  exit 1\n",
@@ -280,16 +296,50 @@
             
             "commands" : {
               "1-unzip-btsync" : {
-                "command" : "gzip -d /opt/btsync.tar.gz"
+                "command" : "gzip -d btsync.tar.gz",
+                "cwd" : "/opt"
               },
               "2-extract-btsync" : {
-                "command" : "tar -xvf /opt/btsync.tar -C /opt"
+                "command" : "tar -xvf /opt/btsync.tar -C /opt",
+                "cwd" : "/opt"
               },
-              "3-run-btsync" : {
-                "command" : "/etc/init.d/btsync start"
+              "3-generate-random-file" : {
+                "command" : "openssl rand -out .rnd 8192",
+                "cwd" : "/opt"
               },
-              "4-update-the-system" : {
-                "command" : "yum -y update"
+              "4-set-randfile-in-env" : {
+                "command" : "export RANDFILE=/opt/.rnd"
+              },
+              "5-create-private-key" : {
+                "command" : { "Fn::Join" : ["", [
+                  "openssl genrsa -aes256 -passout pass:",
+                  { "Ref": "SSLCertKeyPassword" },
+                  " -out btsync.key 4096"
+                ]]},
+                "cwd" : "/opt"
+              },
+              "6-create-csr" : {
+                "command" : { "Fn::Join" : ["", [
+                  "openssl req -passin pass:",
+                  { "Ref": "SSLCertKeyPassword" },
+                  " -new -subj \"/C=US/ST=US/L=Nowhere/O=Nowhere/CN=btcloud\" -key btsync.key -out btsync.csr"
+                ]]},
+                "cwd" : "/opt"
+              },
+              "7-extract-plaintext-key" : {
+                "command" : { "Fn::Join" : ["", [
+                  "openssl rsa -passin pass:",
+                  { "Ref": "SSLCertKeyPassword" },
+                  " -in btsync.key -out btsync.key.plaintext"
+                ]]},
+                "cwd" : "/opt"
+              },
+              "8-create-self-signed-certificate" : {
+                "command" : "openssl x509 -req -days 365 -in btsync.csr -signkey btsync.key.plaintext -out btsync.crt",
+                "cwd" : "/opt"
+              },
+              "9-run-btsync" : {
+                "command" : "service btsync start"
               }
             }
           }
