@@ -447,17 +447,14 @@
               "17-run-btsync" : {
                 "command" : "service btsync start"
               },
-              "18-stop-btsync" : {
-                "command" : "service btsync stop"
-              },
-              "19-enable-web" : {
+              "18-enable-web" : {
                 "command" : "cp btsync.conf.web btsync.conf",
                 "cwd" : "/secure"
               },
-              "20-start-btsync" : {
-                "command" : "service btsync start"
+              "19-start-btsync" : {
+                "command" : "service btsync restart"
               },
-              "19-update-the-system" : {
+              "20-update-the-system" : {
                 "command" : "yum -y update"
               }
             }
