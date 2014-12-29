@@ -288,7 +288,7 @@
               "/opt/btsync.conf" : {
                 "content" : { "Fn::Join" : ["", [
                   "{\n",
-                    "  \"device_name\": \"My Sync Device\",\n",
+                    "  \"device_name\" : \"", { "Ref": "DeviceName" }, "\",\n",
                     "  \"storage_path\": \"/secure/.sync\",\n",
                     "  \"listening_port\": 40003,\n\n",
           
