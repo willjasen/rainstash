@@ -322,7 +322,7 @@
                   "  /secure/btsync --config /secure/btsync.conf\n",
                   ";;\n",
                   "stop)\n",
-                  "  killall btsync\n",
+                  "  kill `pidof btsync`\n",
                   ";;\n",
                   "restart)\n",
                   "  service btsync stop\n",
