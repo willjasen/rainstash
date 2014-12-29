@@ -68,9 +68,18 @@
      "DiskEncryptionPassword" : {
       "Type" : "String",
       "NoEcho": "true",
-      "Description" : "Password used to setup disk encryption.  This should be sufficiently different from any other passwords.",
+      "Description" : "Password used to setup disk encryption. This should be sufficiently different from any other passwords.",
       "MinLength": "8",
       "ConstraintDescription": "Minimum length of 8 characters"
+    },
+    
+    "FolderKey" : {
+      "Type" : "String",
+      "NoEcho": "true",
+      "Description" : "Obtain a read only or read/write key from an already existing Sync folder",
+      "MinLength": "33",
+      "MaxLength": "33",
+      "ConstraintDescription": "All BitTorrent Sync folder keys are 33 characters long"
     }
     
   },
@@ -262,8 +271,35 @@
                 "content" : { "Fn::Join" : ["", [
                   "{\n",
                     "  \"device_name\": \"My Sync Device\",\n",
-                    "  \"storage_path\": \"/secure/.sync\"\n,",
-                    "  \"listening_port\": 40003,\n",
+                    "  \"storage_path\": \"/secure/.sync\",\n",
+                    "  \"listening_port\": 40003,\n\n",
+          
+                    "  \"shared_folders\" : [ {\n",
+                    "  \"secret\" : \"#btsync-secret\",\n",
+                    "  \"dir\" : \"/secure/Sync\",\n",
+                    "  \"use_relay_server\" : true,\n",
+                    "  \"use_tracker\" : true,\n",
+                    "  \"use_dht\" : false,\n",
+                    "  \"search_lan\" : true,\n",
+                    "  \"use_sync_trash\" : true,\n",
+                    "  \"overwrite_changes\" : false\n",
+                    "  } ]\n\n",
+
+                    "/* Advanced preferences can be added to config file. Info is available at http://sync-help.bittorrent.com */\n",
+                  "}\n" 
+                ]]},
+                "mode"    : "000700",
+                "owner"   : "root",
+                "group"   : "root"
+              },
+              
+              "/opt/btsync.conf.web" : {
+                "content" : { "Fn::Join" : ["", [
+                  "{\n",
+                    "  \"device_name\": \"My Sync Device\",\n",
+                    "  \"storage_path\": \"/secure/.sync\",\n",
+                    "  \"listening_port\": 40003,\n\n",
+                    
                     "  \"webui\": {\n",
                     "    \"listen\" : \"0.0.0.0:443\",\n",
                     "    \"force_https\" : true,\n",
@@ -276,7 +312,7 @@
                 "mode"    : "000700",
                 "owner"   : "root",
                 "group"   : "root"
-              }, 
+              },
               
               "/etc/init.d/btsync" : {
                 "content" : { "Fn::Join" : ["", [
@@ -400,10 +436,28 @@
                 "command" : "mkdir .sync",
                 "cwd" : "/secure"
               },
-              "16-run-btsync" : {
+              "16-get-btsync-secret" : {
+                "command" : { "Fn::Join" : ["", [
+                  "sed -i.bak s/#btsync-secret/",
+                  { "Ref": "FolderKey" },
+                  "/g btsync.conf"
+                ]]},
+                "cwd" : "/secure"
+              },
+              "17-run-btsync" : {
                 "command" : "service btsync start"
               },
-              "17-update-the-system" : {
+              "18-stop-btsync" : {
+                "command" : "service btsync stop"
+              },
+              "19-enable-web" : {
+                "command" : "cp btsync.conf.web btsync.conf",
+                "cwd" : "/secure"
+              },
+              "20-start-btsync" : {
+                "command" : "service btsync start"
+              },
+              "19-update-the-system" : {
                 "command" : "yum -y update"
               }
             }
