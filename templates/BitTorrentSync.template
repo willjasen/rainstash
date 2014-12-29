@@ -84,7 +84,7 @@
     
     "WebInterfaceUsername" : {
       "Type" : "String",
-      "Description" : "Username for the web interface"
+      "Description" : "Mininum of 8 characters"
     },
     
     "WebInterfacePassword" : {
@@ -92,7 +92,12 @@
       "NoEcho": "true",
       "Description" : "Password for the web interface",
       "MinLength": "8",
-      "ConstraintDescription": "All BitTorrent Sync folder keys are 33 characters long"
+      "ConstraintDescription": "Mininum of 8 characters"
+    },
+    
+     "DeviceName" : {
+      "Type" : "String",
+      "Description" : "Device name, shown with peers connected"
     }
     
   },
@@ -309,7 +314,7 @@
               "/opt/btsync.conf.web" : {
                 "content" : { "Fn::Join" : ["", [
                   "{\n",
-                    "  \"device_name\": \"My Sync Device\",\n",
+                    "  \"device_name\" : \"", { "Ref": "DeviceName" }, "\",\n",
                     "  \"storage_path\": \"/secure/.sync\",\n",
                     "  \"listening_port\": 40003,\n\n",
                     
