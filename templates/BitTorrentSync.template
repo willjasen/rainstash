@@ -54,7 +54,7 @@
     "SSLCertKeyPassword" : {
       "Type" : "String",
       "NoEcho": "true",
-      "Description" : "Password used to generate a self-signed SSL certificate",
+      "Description" : "Password used to generate a self-signed SSL certificate. This should be sufficiently different from any other passwords.",
       "MinLength": "8",
       "ConstraintDescription": "Minimum length of 8 characters"
     },
@@ -68,7 +68,7 @@
      "DiskEncryptionPassword" : {
       "Type" : "String",
       "NoEcho": "true",
-      "Description" : "Password used to setup disk encryption for extra security",
+      "Description" : "Password used to setup disk encryption.  This should be sufficiently different from any other passwords.",
       "MinLength": "8",
       "ConstraintDescription": "Minimum length of 8 characters"
     }
