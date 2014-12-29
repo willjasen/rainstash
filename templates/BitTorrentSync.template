@@ -239,7 +239,7 @@
       "Properties" : {
         "Size" : { "Ref" : "StorageNeededInGB" },
      	"VolumeType" : "gp2",
-        "AvailabilityZone" : { "Fn::GetAtt" : [ "BitTorrentSyncInstance", "AvailabilityZone" ] }
+        "AvailabilityZone" : { "Fn::GetAtt" : [ "PrivateSubnet", "AvailabilityZone" ] }
       }
     },
     
