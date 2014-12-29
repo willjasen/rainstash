@@ -80,6 +80,19 @@
       "MinLength": "33",
       "MaxLength": "33",
       "ConstraintDescription": "All BitTorrent Sync folder keys are 33 characters long"
+    },
+    
+    "WebInterfaceUsername" : {
+      "Type" : "String",
+      "Description" : "Username for the web interface"
+    },
+    
+    "WebInterfacePassword" : {
+      "Type" : "String",
+      "NoEcho": "true",
+      "Description" : "Password for the web interface",
+      "MinLength": "8",
+      "ConstraintDescription": "All BitTorrent Sync folder keys are 33 characters long"
     }
     
   },
@@ -303,11 +316,13 @@
                     "  \"webui\": {\n",
                     "    \"listen\" : \"0.0.0.0:443\",\n",
                     "    \"force_https\" : true,\n",
+                    "    \"login\" : \"", { "Ref": "WebInterfaceUsername" }, "\",\n",
+                    "    \"password\" : \"", { "Ref": "WebInterfacePassword" }, "\",\n",
                     "    \"ssl_certificate\" : \"/secure/btsync.crt\",\n",
                     "    \"ssl_private_key\" : \"/secure/btsync.key.plaintext\"\n",
                     "  }\n",
                     "/* Advanced preferences can be added to config file. Info is available at http://sync-help.bittorrent.com */\n",
-                  "}\n" 
+                  "}\n"
                 ]]},
                 "mode"    : "000700",
                 "owner"   : "root",
@@ -326,6 +341,7 @@
                   ";;\n",
                   "restart)\n",
                   "  service btsync stop\n",
+                  "  sleep 5\n",
                   "  service btsync start\n",
                   ";;\n",
                   "*)\n",
@@ -444,14 +460,14 @@
                 ]]},
                 "cwd" : "/secure"
               },
-              "17-run-btsync" : {
+              "17-start-btsync" : {
                 "command" : "service btsync start"
               },
               "18-enable-web" : {
                 "command" : "cp btsync.conf.web btsync.conf",
                 "cwd" : "/secure"
               },
-              "19-start-btsync" : {
+              "19-restart-btsync" : {
                 "command" : "service btsync restart"
               },
               "20-update-the-system" : {
