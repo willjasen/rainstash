@@ -263,7 +263,7 @@
                   "{\n",
                     "  \"device_name\": \"My Sync Device\",\n",
                     "  \"storage_path\": \"/secure/.sync\"\n,",
-                    "  \"listening_port\": 40003\n",
+                    "  \"listening_port\": 40003,\n",
                     "  \"webui\": {\n",
                     "    \"listen\" : \"0.0.0.0:443\",\n",
                     "    \"force_https\" : true,\n",
@@ -402,6 +402,9 @@
               },
               "16-run-btsync" : {
                 "command" : "service btsync start"
+              },
+              "17-update-the-system" : {
+                "command" : "yum -y update"
               }
             }
           }
