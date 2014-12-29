@@ -5,6 +5,7 @@ rainstash is an Amazon CloudFormation template for automating the setup of BitTo
 
 The following information must be supplied as parameters to rainstash:
 * **AllowedSubnet** - the subnet allowed to managed the instance via SSH and HTTPS, IPs outside of this subnet will not be able to manage the instance, subnet should be in CIDR form (x.x.x.x/xx)
+* **DeviceName** - the name of this device
 * **DiskEncryptionPassword** - the password used to encrypt the disk where btsync runs from and where Sync data is stored; this password should be sufficiently different from all other passwords
 * **FolderKey** - the read-only or read/write shared folder key, used to join a folder upon stack setup, must be 33 characters and must be obtained from an existing shared folder
 * **InstanceType** - the EC2 instance type (i.e. - the size of the instance); see http://aws.amazon.com/ec2/instance-types/
@@ -13,5 +14,7 @@ The following information must be supplied as parameters to rainstash:
 * **StorageNeededInGB** - the amount of storage, in gigabytes, needed
 * **SubnetCIDR** - the subnet within the VPC, subnet should be in CIDR form (x.x.x.x/xx), it must be a part of or all of VPCCIDR
 * **VPCCIDR** - the subnet of the entire virtual private cloud, subnet should be in CIDR form (x.x.x.x/xx)
+* **WebInterfacePassword** - the username for the web interface
+* **WebInterfaceUsername** - the password for the web interface
 
 rainstash and Amazon CloudFormation is completely free to use, however, Amazon may charge for the use of resources created with rainstash. rainstash uses the following cost-related services: EC2, S3, and data transfer
