@@ -265,11 +265,12 @@
                 "content" : { "Fn::Join" : ["", [
                   "{\n",
                     "  \"device_name\": \"My Sync Device\",\n",
+                    "  \"storage_path\": \"/secure/.sync\"\n,",
                     "  \"webui\": {\n",
                     "    \"listen\" : \"0.0.0.0:443\",\n",
                     "    \"force_https\" : true,\n",
-                    "    \"ssl_certificate\" : \"/opt/btsync.crt\",\n",
-                    "    \"ssl_private_key\" : \"/opt/btsync.key.plaintext\"\n",
+                    "    \"ssl_certificate\" : \"/secure/btsync.crt\",\n",
+                    "    \"ssl_private_key\" : \"/secure/btsync.key.plaintext\"\n",
                     "  }\n",
                     "/* Advanced preferences can be added to config file. Info is available at http://sync-help.bittorrent.com */\n",
                   "}\n" 
@@ -284,7 +285,7 @@
                   "#!/bin/sh\n",
                   "case \"$1\" in\n",
                   "start)\n",
-                  "  /opt/btsync --config /opt/btsync.conf\n",
+                  "  /secure/btsync --config /secure/btsync.conf\n",
                   ";;\n",
                   "stop)\n",
                   "  killall btsync\n",
@@ -327,50 +328,81 @@
             },
             
             "commands" : {
-              "01-unzip-btsync" : {
+              "01-encrypt-volume" : {
+                "command" : { "Fn::Join" : ["", [
+                  "echo ",
+                  { "Ref": "DiskEncryptionPassword" },
+                  " | cryptsetup luksFormat /dev/xvdf"
+                ]]}
+              },
+              "02-open-volume" : {
+                "command" : { "Fn::Join" : ["", [
+                  "echo ",
+                  { "Ref": "DiskEncryptionPassword" },
+                  " | cryptsetup luksOpen /dev/xvdf storedev"
+                ]]}
+              },
+              "03-format-volume" : {
+                "command" : "mkfs.ext4 -m 0 /dev/mapper/storedev"     
+              },
+              "04-create-mount-point" : {
+                "command" : "mkdir /secure"     
+              },
+              "05-mount-encrypted-volume" : {
+                "command" : "mount /dev/mapper/storedev /secure"     
+              },
+              "06-move-app-and-config" : {
+                "command" : "mv btsync* /secure",
+                "cwd": "/opt"  
+              },
+              "07-unzip-btsync" : {
                 "command" : "gzip -d btsync.tar.gz",
-                "cwd" : "/opt"
+                "cwd" : "/secure"
               },
-              "02-extract-btsync" : {
-                "command" : "tar -xvf /opt/btsync.tar -C /opt",
-                "cwd" : "/opt"
+              "08-extract-btsync" : {
+                "command" : "tar -xvf /secure/btsync.tar -C /secure",
+                "cwd" : "/secure"
               },
-              "03-generate-random-file" : {
+              "09-generate-random-file" : {
                 "command" : "openssl rand -out .rnd 8192",
-                "cwd" : "/opt"
+                "cwd" : "/secure"
               },
-              "04-set-randfile-in-env" : {
-                "command" : "export RANDFILE=/opt/.rnd"
+              "10-set-randfile-in-env" : {
+                "command" : "export RANDFILE=/secure/.rnd"
               },
-              "05-create-private-key" : {
+              "11-create-private-key" : {
                 "command" : { "Fn::Join" : ["", [
                   "openssl genrsa -aes256 -passout pass:",
                   { "Ref": "SSLCertKeyPassword" },
                   " -out btsync.key 4096"
                 ]]},
-                "cwd" : "/opt"
+                "cwd" : "/secure"
               },
-              "06-create-csr" : {
+              "12-create-csr" : {
                 "command" : { "Fn::Join" : ["", [
                   "openssl req -passin pass:",
                   { "Ref": "SSLCertKeyPassword" },
-                  " -new -subj \"/C=US/ST=US/L=Nowhere/O=Nowhere/CN=btcloud\" -key btsync.key -out btsync.csr"
+                  " -new -subj \"/C=US/ST=US/L=Nowhere/O=Nowhere/CN=rainstash\" -key btsync.key -out btsync.csr"
                 ]]},
-                "cwd" : "/opt"
+                "cwd" : "/secure"
               },
-              "07-extract-plaintext-key" : {
+              "13-extract-plaintext-key" : {
                 "command" : { "Fn::Join" : ["", [
                   "openssl rsa -passin pass:",
                   { "Ref": "SSLCertKeyPassword" },
                   " -in btsync.key -out btsync.key.plaintext"
                 ]]},
-                "cwd" : "/opt"
+                "cwd" : "/secure"
               },
-              "08-create-self-signed-certificate" : {
+              "14-create-self-signed-certificate" : {
                 "command" : "openssl x509 -req -days 365 -in btsync.csr -signkey btsync.key.plaintext -out btsync.crt",
-                "cwd" : "/opt"
+                "cwd" : "/secure"
               },
-              "09-run-btsync" : {
+              "15-create-sync-directory" : {
+                "command" : "mkdir .sync",
+                "cwd" : "/secure"
+              },
+              "16-run-btsync" : {
                 "command" : "service btsync start"
               }
             }
