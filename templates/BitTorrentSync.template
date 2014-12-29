@@ -63,6 +63,14 @@
       "Type" : "String",
       "Description" : "Amount of storage needed for BitTorrent Sync",
       "Default": "1"
+    },
+    
+     "DiskEncryptionPassword" : {
+      "Type" : "String",
+      "NoEcho": "true",
+      "Description" : "Password used to setup disk encryption for extra security",
+      "MinLength": "8",
+      "ConstraintDescription": "Minimum length of 8 characters"
     }
     
   },
@@ -319,22 +327,22 @@
             },
             
             "commands" : {
-              "1-unzip-btsync" : {
+              "01-unzip-btsync" : {
                 "command" : "gzip -d btsync.tar.gz",
                 "cwd" : "/opt"
               },
-              "2-extract-btsync" : {
+              "02-extract-btsync" : {
                 "command" : "tar -xvf /opt/btsync.tar -C /opt",
                 "cwd" : "/opt"
               },
-              "3-generate-random-file" : {
+              "03-generate-random-file" : {
                 "command" : "openssl rand -out .rnd 8192",
                 "cwd" : "/opt"
               },
-              "4-set-randfile-in-env" : {
+              "04-set-randfile-in-env" : {
                 "command" : "export RANDFILE=/opt/.rnd"
               },
-              "5-create-private-key" : {
+              "05-create-private-key" : {
                 "command" : { "Fn::Join" : ["", [
                   "openssl genrsa -aes256 -passout pass:",
                   { "Ref": "SSLCertKeyPassword" },
@@ -342,7 +350,7 @@
                 ]]},
                 "cwd" : "/opt"
               },
-              "6-create-csr" : {
+              "06-create-csr" : {
                 "command" : { "Fn::Join" : ["", [
                   "openssl req -passin pass:",
                   { "Ref": "SSLCertKeyPassword" },
@@ -350,7 +358,7 @@
                 ]]},
                 "cwd" : "/opt"
               },
-              "7-extract-plaintext-key" : {
+              "07-extract-plaintext-key" : {
                 "command" : { "Fn::Join" : ["", [
                   "openssl rsa -passin pass:",
                   { "Ref": "SSLCertKeyPassword" },
@@ -358,11 +366,11 @@
                 ]]},
                 "cwd" : "/opt"
               },
-              "8-create-self-signed-certificate" : {
+              "08-create-self-signed-certificate" : {
                 "command" : "openssl x509 -req -days 365 -in btsync.csr -signkey btsync.key.plaintext -out btsync.crt",
                 "cwd" : "/opt"
               },
-              "9-run-btsync" : {
+              "09-run-btsync" : {
                 "command" : "service btsync start"
               }
             }
