@@ -478,6 +478,15 @@
               "20-update-the-system" : {
                 "command" : "yum -y update"
               }
+            },
+            "services" : {
+              "sysvinit" : {
+                "btsync" : {
+                  "enabled" : "true",
+                  "ensureRunning" : "true",
+                  "files" : ["/secure/btsync.conf"]
+                }
+              }
             }
           }
         }
