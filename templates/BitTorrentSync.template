@@ -14,7 +14,7 @@
     
     "KeyName": {
       "Description" : "The name of an existing EC2 keypair for this instance",
-      "Type": "String",
+      "Type": "AWS::EC2::KeyPair::KeyName",
       "Default": "BitTorrentSync",
       "MinLength": "1",
       "MaxLength": "255",
