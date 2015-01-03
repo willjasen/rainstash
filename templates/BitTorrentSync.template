@@ -337,6 +337,8 @@
               "/etc/init.d/btsync" : {
                 "content" : { "Fn::Join" : ["", [
                   "#!/bin/sh\n",
+                  "# chkconfig: 12345 97 97\n",
+                  "# description: BitTorrent Sync\n\n",
                   "case \"$1\" in\n",
                   "start)\n",
                   "  /secure/btsync --config /secure/btsync.conf\n",
