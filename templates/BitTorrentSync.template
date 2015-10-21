@@ -104,7 +104,9 @@
   
   "Mappings": {
     "RegionMap": {
-      "us-east-1": { "AMI" : "ami-b66ed3de" }
+      "us-east-1": { "AMI" : "ami-b66ed3de" },
+      "us-west-1": { "AMI" : "ami-cd3aff89" },
+      "us-west-2": { "AMI" : "ami-9ff7e8af" }
     }
   },
   
