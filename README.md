@@ -17,4 +17,6 @@ The following information must be supplied as parameters to rainstash:
 * **WebInterfacePassword** - the username for the web interface
 * **WebInterfaceUsername** - the password for the web interface
 
-rainstash and Amazon CloudFormation is completely free to use, however, Amazon may charge for the use of resources created with rainstash. rainstash uses the following cost-related services: EC2, S3, and data transfer
+rainstash and Amazon CloudFormation is completely free to use, however, Amazon may charge for the use of resources created with rainstash. rainstash uses the following cost-related services: EC2, S3, and data transfer.
+
+Due to technical and security considerations, rainstash is designed to be ephimeral. If the EC2 instance where rainstash is running is shutdown or rebooted, data on that instance is not easily recoverable unless you know how to go about doing so. The workaround - the BitTorrent protocol and BitTorrent Sync are meant to be decentralized and distributed. Always have more than one instance, whether its multiple rainstash stacks or running on your own hardware. Please keep this in mind!
