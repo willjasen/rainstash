@@ -305,7 +305,7 @@
                     "  \"overwrite_changes\" : false\n",
                     "  } ]\n\n",
 
-                    "/* Advanced preferences can be added to config file. Info is available at http://sync-help.Resilio.com */\n",
+                    "/* Advanced preferences can be added to config file. Info is available at https://help.getsync.com/hc/en-us/articles/206178884-Running-Sync-in-configuration-mode */\n",
                   "}\n"
                 ]]},
                 "mode"    : "000700",
@@ -328,7 +328,7 @@
                     "    \"ssl_certificate\" : \"/secure/rslsync.crt\",\n",
                     "    \"ssl_private_key\" : \"/secure/rslsync.key.plaintext\"\n",
                     "  }\n",
-                    "/* Advanced preferences can be added to config file. Info is available at http://sync-help.Resilio.com */\n",
+                    "/* Advanced preferences can be added to config file. Info is available at https://help.getsync.com/hc/en-us/articles/206178884-Running-Sync-in-configuration-mode */\n",
                   "}\n"
                 ]]},
                 "mode"    : "000700",
