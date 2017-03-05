@@ -243,6 +243,12 @@
             "CidrIp" : { "Ref" : "AllowedSubnet" }
          },
          {
+            "IpProtocol" : "tcp",
+            "FromPort" : "40003",
+            "ToPort" : "40003",
+            "CidrIp" : "0.0.0.0/0"
+         },
+         {
             "IpProtocol" : "udp",
             "FromPort" : "40003",
             "ToPort" : "40003",
