@@ -246,7 +246,7 @@
             "IpProtocol" : "udp",
             "FromPort" : "40003",
             "ToPort" : "40003",
-            "CidrIp" : { "Ref" : "AllowedSubnet" }
+            "CidrIp" : "0.0.0.0/0"
          }
          ],
         "SecurityGroupEgress" : [{
