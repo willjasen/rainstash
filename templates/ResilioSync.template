@@ -104,9 +104,12 @@
 
   "Mappings": {
     "RegionMap": {
-      "us-east-1": { "AMI" : "ami-b66ed3de" },
-      "us-west-1": { "AMI" : "ami-cd3aff89" },
-      "us-west-2": { "AMI" : "ami-9ff7e8af" }
+      "us-east-1": { "AMI" : "ami-0b33d91d" },
+      "us-east-2": { "AMI" : "ami-c55673a0"},
+      "us-west-1": { "AMI" : "ami-165a0876" },
+      "us-west-2": { "AMI" : "ami-f173cc91" },
+      "eu-west-1": { "AMI" : "ami-70edb016" },
+      "eu-west-2": { "AMI" : "ami-f1949e95" }
     }
   },
 
