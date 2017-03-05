@@ -281,7 +281,7 @@
             "files" : {
 
                "/opt/rslsync.tar.gz" : {
-                "source"  : "http://download.getsyncapp.com/endpoint/rslsync/os/linux-x64/track/stable",
+                "source"  : "https://download-cdn.resilio.com/stable/linux-x64/resilio-sync_x64.tar.gz",
                 "mode"    : "000700",
                 "owner"   : "root",
                 "group"   : "root"
