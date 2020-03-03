@@ -65,7 +65,7 @@
       "Default": "1"
     },
 
-     "DiskEncryptionPassword" : {
+    "DiskEncryptionPassword" : {
       "Type" : "String",
       "NoEcho": "true",
       "Description" : "Password used to setup disk encryption. This should be sufficiently different from any other passwords.",
@@ -96,9 +96,16 @@
       "ConstraintDescription": "Mininum of 8 characters"
     },
 
-     "DeviceName" : {
+    "DeviceName" : {
       "Type" : "String",
       "Description" : "Device name, shown with peers connected"
+    },
+
+    "VolumeType" : {
+      "Type" : "String",
+      "Default" : "standard",
+      "AllowedValues" : ["gp2","io1","sc1","st1","standard"],
+      "Description" : "Enter in gp2, io1, sc1, st1, or standard. Default is standard magnetic hard drive (for cost)."
     }
 
   },
@@ -277,7 +284,7 @@
       "Type" : "AWS::EC2::Volume",
       "Properties" : {
         "Size" : { "Ref" : "StorageNeededInGB" },
-     	"VolumeType" : "gp2",
+     	  "VolumeType" : { "Ref": "VolumeType" },
         "AvailabilityZone" : { "Fn::GetAtt" : [ "PrivateSubnet", "AvailabilityZone" ] }
       }
     },
