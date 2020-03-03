@@ -14,6 +14,7 @@ The following information must be supplied as parameters to rainstash:
 * **StorageNeededInGB** - the amount of storage, in gigabytes, needed
 * **SubnetCIDR** - the subnet within the VPC, subnet should be in CIDR form (x.x.x.x/xx), it must be a part of or all of VPCCIDR
 * **VPCCIDR** - the subnet of the entire virtual private cloud, subnet should be in CIDR form (x.x.x.x/xx)
+* **VolumeType** - the type of volume to configure, standard is the default for lowest cost
 * **WebInterfacePassword** - the username for the web interface
 * **WebInterfaceUsername** - the password for the web interface
 
