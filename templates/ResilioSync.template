@@ -328,6 +328,7 @@
                     "  \"device_name\" : \"", { "Ref": "DeviceName" }, "\",\n",
                     "  \"storage_path\": \"/secure/.sync\",\n",
                     "  \"listening_port\": 40003,\n\n",
+                    "  \"directory_root\" : \"/secure\",\n",
 
                     "  \"webui\": {\n",
                     "    \"listen\" : \"0.0.0.0:443\",\n",
