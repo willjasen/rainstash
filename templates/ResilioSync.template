@@ -305,7 +305,7 @@
 
                     "  \"shared_folders\" : [ {\n",
                     "  \"secret\" : \"#rslsync-secret\",\n",
-                    "  \"dir\" : \"/secure/Sync\",\n",
+                    "  \"dir\" : \"/secure/rainstash\",\n",
                     "  \"use_relay_server\" : true,\n",
                     "  \"use_tracker\" : true,\n",
                     "  \"use_dht\" : false,\n",
