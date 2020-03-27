@@ -302,7 +302,7 @@
                     "  \"device_name\" : \"", { "Ref": "DeviceName" }, "\",\n",
                     "  \"storage_path\": \"/secure/.sync\",\n",
                     "  \"listening_port\": 40003,\n\n",
-
+                    "  \"directory_root\" : \"/secure\",\n",
                     "  \"shared_folders\" : [ {\n",
                     "  \"secret\" : \"#rslsync-secret\",\n",
                     "  \"dir\" : \"/secure/rainstash\",\n",
