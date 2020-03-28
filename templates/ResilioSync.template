@@ -228,7 +228,7 @@
     "InstanceSecurityGroup" : {
    	  "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
-        "GroupDescription" : "Allow http to client host",
+        "GroupDescription" : "Allow inbound ports needed for Resilio Sync",
         "VpcId" : {"Ref" : "ResilioSyncVPC"},
         "SecurityGroupIngress" : [{
             "IpProtocol" : "tcp",
