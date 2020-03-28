@@ -10,7 +10,6 @@ The following information must be supplied as parameters to rainstash:
 * **FolderKey** - the encrypted read-only key used to maintain a copy of a folder upon stack setup, must begin with a F followed by 32 uppercase alphanumeric characters
 * **InstanceType** - the EC2 instance type (i.e. - the size of the instance); see http://aws.amazon.com/ec2/instance-types/
 * **KeyName** - the name of keypair used to setup instance; used to access instance via SSH
-* **SSLCertKeyPassword** - the password used to generate the self-signed SSL certificate; this password should be sufficiently different from all other passwords
 * **StorageNeededInGB** - the amount of storage, in gigabytes, needed
 * **SubnetCIDR** - the subnet within the VPC, subnet should be in CIDR form (x.x.x.x/xx), it must be a part of or all of VPCCIDR
 * **VPCCIDR** - the subnet of the entire virtual private cloud, subnet should be in CIDR form (x.x.x.x/xx)

@@ -51,14 +51,6 @@
       "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
     },
 
-    "SSLCertKeyPassword" : {
-      "Type" : "String",
-      "NoEcho": "true",
-      "Description" : "Password used to generate a self-signed SSL certificate. This should be sufficiently different from any other passwords.",
-      "MinLength": "8",
-      "ConstraintDescription": "Minimum length of 8 characters"
-    },
-
     "StorageNeededInGB" : {
       "Type" : "String",
       "Description" : "Amount of storage needed for Resilio Sync",
@@ -236,7 +228,7 @@
     "InstanceSecurityGroup" : {
    	  "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
-        "GroupDescription" : "Allow http to client host",
+        "GroupDescription" : "Allow inbound ports needed for Resilio Sync",
         "VpcId" : {"Ref" : "ResilioSyncVPC"},
         "SecurityGroupIngress" : [{
             "IpProtocol" : "tcp",
@@ -310,10 +302,10 @@
                     "  \"device_name\" : \"", { "Ref": "DeviceName" }, "\",\n",
                     "  \"storage_path\": \"/secure/.sync\",\n",
                     "  \"listening_port\": 40003,\n\n",
-
+                    "  \"directory_root\" : \"/secure\",\n",
                     "  \"shared_folders\" : [ {\n",
                     "  \"secret\" : \"#rslsync-secret\",\n",
-                    "  \"dir\" : \"/secure/Sync\",\n",
+                    "  \"dir\" : \"/secure/rainstash\",\n",
                     "  \"use_relay_server\" : true,\n",
                     "  \"use_tracker\" : true,\n",
                     "  \"use_dht\" : false,\n",
@@ -336,6 +328,7 @@
                     "  \"device_name\" : \"", { "Ref": "DeviceName" }, "\",\n",
                     "  \"storage_path\": \"/secure/.sync\",\n",
                     "  \"listening_port\": 40003,\n\n",
+                    "  \"directory_root\" : \"/secure\",\n",
 
                     "  \"webui\": {\n",
                     "    \"listen\" : \"0.0.0.0:443\",\n",
@@ -446,28 +439,20 @@
               "10-set-randfile-in-env" : {
                 "command" : "export RANDFILE=/secure/.rnd"
               },
+              "10--create-ssl-password" : {
+                "command" : "openssl rand -base64 32 > ssl_password",
+                "cwd" : "/secure"
+              },
               "11-create-private-key" : {
-                "command" : { "Fn::Join" : ["", [
-                  "openssl genrsa -aes256 -passout pass:",
-                  { "Ref": "SSLCertKeyPassword" },
-                  " -out rslsync.key 4096"
-                ]]},
+                "command" : "openssl genrsa -aes256 -passout pass:$(cat ssl_password) -out rslsync.key 4096",
                 "cwd" : "/secure"
               },
               "12-create-csr" : {
-                "command" : { "Fn::Join" : ["", [
-                  "openssl req -passin pass:",
-                  { "Ref": "SSLCertKeyPassword" },
-                  " -new -subj \"/C=US/ST=US/L=Nowhere/O=Nowhere/CN=rainstash\" -key rslsync.key -out rslsync.csr"
-                ]]},
+                "command" : "openssl req -passin pass:$(cat ssl_password) -new -subj \"/C=US/ST=US/L=Nowhere/O=Nowhere/CN=rainstash\" -key rslsync.key -out rslsync.csr",
                 "cwd" : "/secure"
               },
               "13-extract-plaintext-key" : {
-                "command" : { "Fn::Join" : ["", [
-                  "openssl rsa -passin pass:",
-                  { "Ref": "SSLCertKeyPassword" },
-                  " -in rslsync.key -out rslsync.key.plaintext"
-                ]]},
+                "command" : "openssl rsa -passin pass:$(cat ssl_password) -in rslsync.key -out rslsync.key.plaintext",
                 "cwd" : "/secure"
               },
               "14-create-self-signed-certificate" : {
