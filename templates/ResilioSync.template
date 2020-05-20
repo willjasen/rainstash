@@ -528,9 +528,12 @@
   },
 
   "Outputs" : {
-    "PublicIP" : {
-      "Description" : "Public IP of the instance",
-      "Value" : { "Ref" : "PublicIP" }
+    "Link" : {
+      "Description" : "HTTPS link to access the instance",
+      "Value" : { "Fn::Join" : ["", [
+        "https://", { "Ref": "PublicIP" }
+      ]]}
+
     }
   }
 }
