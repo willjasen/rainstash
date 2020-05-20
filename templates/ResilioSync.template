@@ -528,14 +528,6 @@
   },
 
   "Outputs" : {
-    "VPCId" : {
-      "Description" : "VPCId of the newly created VPC",
-      "Value" :  { "Ref" : "ResilioSyncVPC" }
-    },
-    "PrivateSubnet" : {
-      "Description" : "SubnetId of the VPN connected subnet",
-      "Value" :  { "Ref" : "PrivateSubnet" }
-    },
     "PublicIP" : {
       "Description" : "Public IP of the instance",
       "Value" : { "Ref" : "PublicIP" }
