@@ -12,8 +12,8 @@ The following information must be supplied as parameters to rainstash:
 * **KeyName** - the name of keypair used to setup instance; used to access instance via SSH
 * **StorageNeededInGB** - the amount of storage, in gigabytes, needed
 * **VolumeType** - the type of volume to configure, standard is the default for lowest cost
-* **WebInterfacePassword** - the username for the web interface
-* **WebInterfaceUsername** - the password for the web interface
+* **WebInterfacePassword** - the password for the web interface
+* **WebInterfaceUsername** - the username for the web interface
 
 rainstash and Amazon CloudFormation is completely free to use, however, Amazon may charge for the use of resources created with rainstash. rainstash uses the following cost-related services: EC2, S3, and data transfer.
 
