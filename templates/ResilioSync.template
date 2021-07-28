@@ -293,13 +293,19 @@
         "Comment" : "Resilio Sync",
         "AWS::CloudFormation::Init" : {
           "config" : {
+            "users" : {
+              "rslsync" : {
+                "uid" : "1024",
+                "homeDir" : "/tmp"
+              }
+            },
             "files" : {
 
                "/opt/rslsync.tar.gz" : {
                 "source"  : "https://download-cdn.resilio.com/stable/linux-x64/resilio-sync_x64.tar.gz",
                 "mode"    : "000700",
-                "owner"   : "root",
-                "group"   : "root"
+                "owner"   : "rslsync",
+                "group"   : "rslsync"
               },
 
               "/opt/rslsync.conf" : {
@@ -324,8 +330,8 @@
                   "}\n"
                 ]]},
                 "mode"    : "000700",
-                "owner"   : "root",
-                "group"   : "root"
+                "owner"   : "rslsync",
+                "group"   : "rslsync"
               },
 
               "/opt/rslsync.conf.web" : {
@@ -348,8 +354,8 @@
                   "}\n"
                 ]]},
                 "mode"    : "000700",
-                "owner"   : "root",
-                "group"   : "root"
+                "owner"   : "rslsync",
+                "group"   : "rslsync"
               },
 
               "/etc/init.d/rslsync" : {
@@ -375,8 +381,8 @@
                   "exit 0"
                 ]]},
                 "mode"    : "000700",
-                "owner"   : "root",
-                "group"   : "root"
+                "owner"   : "rslsync",
+                "group"   : "rslsync"
               },
 
               "/etc/cfn/cfn-hup.conf" : {
