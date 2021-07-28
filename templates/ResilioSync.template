@@ -411,16 +411,16 @@
             "commands" : {
               "01-encrypt-volume" : {
                 "command" : { "Fn::Join" : ["", [
-                  "echo ",
+                  "echo \"",
                   { "Ref": "DiskEncryptionPassword" },
-                  " | cryptsetup luksFormat /dev/xvdf"
+                  "\" | cryptsetup luksFormat /dev/xvdf"
                 ]]}
               },
               "02-open-volume" : {
                 "command" : { "Fn::Join" : ["", [
-                  "echo ",
+                  "echo \"",
                   { "Ref": "DiskEncryptionPassword" },
-                  " | cryptsetup luksOpen /dev/xvdf storedev"
+                  "\" | cryptsetup luksOpen /dev/xvdf storedev"
                 ]]}
               },
               "03-format-volume" : {
