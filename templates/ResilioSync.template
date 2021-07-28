@@ -244,8 +244,8 @@
          },
          {
             "IpProtocol" : "tcp",
-            "FromPort" : "443",
-            "ToPort" : "443",
+            "FromPort" : "8888",
+            "ToPort" : "8888",
             "CidrIp" : { "Ref" : "AllowedSubnet" }
          },
          {
@@ -343,7 +343,7 @@
                     "  \"directory_root\" : \"/secure\",\n",
 
                     "  \"webui\": {\n",
-                    "    \"listen\" : \"0.0.0.0:443\",\n",
+                    "    \"listen\" : \"0.0.0.0:8888\",\n",
                     "    \"force_https\" : true,\n",
                     "    \"login\" : \"", { "Ref": "WebInterfaceUsername" }, "\",\n",
                     "    \"password\" : \"", { "Ref": "WebInterfacePassword" }, "\",\n",
@@ -365,7 +365,7 @@
                   "# description: Resilio Sync\n\n",
                   "case \"$1\" in\n",
                   "start)\n",
-                  "  /secure/rslsync --config /secure/rslsync.conf\n",
+                  "  /sbin/runuser rslsync  -s /bin/bash -c \"/secure/rslsync --config /secure/rslsync.conf\"\n",
                   ";;\n",
                   "stop)\n",
                   "  kill `pidof rslsync`\n",
@@ -429,8 +429,8 @@
               "04-create-mount-point" : {
                 "command" : "mkdir /secure"
               },
-              "05-mount-encrypted-volume" : {
-                "command" : "mount /dev/mapper/storedev /secure"
+              "05-mount-encrypted-volume-and-assign-owner" : {
+                "command" : "mount /dev/mapper/storedev /secure; chown rslsync /secure"
               },
               "06-move-app-and-config" : {
                 "command" : "mv rslsync* /secure",
@@ -472,7 +472,7 @@
                 "cwd" : "/secure"
               },
               "15-create-sync-directory" : {
-                "command" : "mkdir .sync",
+                "command" : "mkdir .sync; chown -R rslsync .sync",
                 "cwd" : "/secure"
               },
               "16-get-rslsync-secret" : {
@@ -563,7 +563,7 @@
     "Link" : {
       "Description" : "HTTPS link to access the instance",
       "Value" : { "Fn::Join" : ["", [
-        "https://", { "Ref": "PublicIP" }
+        "https://", { "Ref": "PublicIP" }, ":8888"
       ]]}
 
     }
