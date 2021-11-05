@@ -451,31 +451,31 @@
               "10-set-randfile-in-env" : {
                 "command" : "export RANDFILE=/secure/.rnd"
               },
-              "10--create-ssl-password" : {
+              "11-create-ssl-password" : {
                 "command" : "openssl rand -base64 32 > ssl_password",
                 "cwd" : "/secure"
               },
-              "11-create-private-key" : {
+              "12-create-private-key" : {
                 "command" : "openssl genrsa -aes256 -passout pass:$(cat ssl_password) -out rslsync.key 4096",
                 "cwd" : "/secure"
               },
-              "12-create-csr" : {
+              "13-create-csr" : {
                 "command" : "openssl req -passin pass:$(cat ssl_password) -new -subj \"/C=US/ST=US/L=Nowhere/O=Nowhere/CN=rainstash\" -key rslsync.key -out rslsync.csr",
                 "cwd" : "/secure"
               },
-              "13-extract-plaintext-key" : {
+              "14-extract-plaintext-key" : {
                 "command" : "openssl rsa -passin pass:$(cat ssl_password) -in rslsync.key -out rslsync.key.plaintext",
                 "cwd" : "/secure"
               },
-              "14-create-self-signed-certificate" : {
+              "15-create-self-signed-certificate" : {
                 "command" : "openssl x509 -req -days 365 -in rslsync.csr -signkey rslsync.key.plaintext -out rslsync.crt",
                 "cwd" : "/secure"
               },
-              "15-create-sync-directory" : {
+              "16-create-sync-directory" : {
                 "command" : "mkdir .sync; chown -R rslsync .sync",
                 "cwd" : "/secure"
               },
-              "16-get-rslsync-secret" : {
+              "17-get-rslsync-secret" : {
                 "command" : { "Fn::Join" : ["", [
                   "sed -i.bak s/#rslsync-secret/",
                   { "Ref": "FolderKey" },
@@ -483,17 +483,17 @@
                 ]]},
                 "cwd" : "/secure"
               },
-              "17-start-rslsync" : {
+              "18-start-rslsync" : {
                 "command" : "service rslsync start"
               },
-              "18-enable-web" : {
+              "19-enable-web" : {
                 "command" : "cp rslsync.conf.web rslsync.conf",
                 "cwd" : "/secure"
               },
-              "19-restart-rslsync" : {
+              "20-restart-rslsync" : {
                 "command" : "service rslsync restart"
               },
-              "20-update-the-system" : {
+              "21-update-the-system" : {
                 "command" : "yum -y update"
               }
             },
