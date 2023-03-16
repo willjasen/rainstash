@@ -107,7 +107,7 @@
         "CidrBlock" : "192.168.10.0/24",
         "Tags" : [
           { "Key" : "Application", "Value" : { "Ref" : "AWS::StackName" } },
-          { "Key" : "Network", "Value" : "VPC Subnet" }
+          { "Key" : "Network", "Value" : "192.168.10.0/24" }
         ]
       }
     },
@@ -118,7 +118,7 @@
         "VpcId" : { "Ref" : "ResilioSyncVPC" },
         "Tags" : [
           { "Key" : "Application", "Value" : { "Ref" : "AWS::StackName" } },
-          { "Key" : "Network", "Value" : "VPC Subnet" }
+          { "Key" : "Network", "Value" : "192.168.10.0/24" }
         ]
       }
     },
