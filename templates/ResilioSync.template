@@ -37,14 +37,6 @@
       "Default": "1"
     },
 
-    "DiskEncryptionPassword" : {
-      "Type" : "String",
-      "NoEcho": "true",
-      "Description" : "Password used to setup disk encryption. This should be sufficiently different from any other passwords.",
-      "MinLength": "8",
-      "ConstraintDescription": "Minimum length of 8 characters"
-    },
-
     "FolderKey" : {
       "Type" : "String",
       "NoEcho": "true",
