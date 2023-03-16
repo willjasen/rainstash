@@ -301,13 +301,6 @@
             },
             "files" : {
 
-               "/opt/rslsync.tar.gz" : {
-                "source"  : "https://download-cdn.resilio.com/stable/linux-x64/resilio-sync_x64.tar.gz",
-                "mode"    : "000700",
-                "owner"   : "rslsync",
-                "group"   : "rslsync"
-              },
-
               "/opt/rslsync.conf" : {
                 "content" : { "Fn::Join" : ["", [
                   "{\n",
@@ -411,10 +404,14 @@
             "commands" : {
               "01-encrypt-and-open-volume" : {
                 "command" : { "Fn::Join" : ["", [
-                  "encryptionPassword=$(openssl rand -hex 64);",
+                  "encryptionPassword=$(openssl rand -base64 64);",
                   "echo $encryptionPassword | cryptsetup luksFormat /dev/xvdf;",
                   "echo $encryptionPassword | cryptsetup luksOpen /dev/xvdf storedev"
                 ]]}
+              },
+              "02-download-resilio-sync" : {
+                "command" : "curl https://download-cdn.resilio.com/stable/linux-x64/resilio-sync_x64.tar.gz > rslsync.tar.gz",
+                "cwd" : "/opt"
               },
               "03-format-volume" : {
                 "command" : "mkfs.ext4 -m 0 /dev/mapper/storedev"
