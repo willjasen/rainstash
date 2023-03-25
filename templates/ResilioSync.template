@@ -44,7 +44,7 @@
       "MinLength": "33",
       "MaxLength": "33",
       "AllowedPattern": "^F[A-Z,0-9]{32}$",
-      "ConstraintDescription": "All Resilio Sync encrypted folder keys are 33 characters long, beginning with F"
+      "ConstraintDescription": "All Resilio Sync encrypted folder keys are 33 capitalized alphanumeric characters long, beginning with F"
     },
 
     "WebInterfaceUsername" : {
