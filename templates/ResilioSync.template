@@ -545,9 +545,12 @@
     "Link" : {
       "Description" : "HTTPS link to access the instance",
       "Value" : { "Fn::Join" : ["", [
-        "https://", { "Ref": "PublicIP" }, ":8888, only available from ", { "Ref": "AllowedSubnet" }
+        "https://", { "Ref": "PublicIP" }, ":8888"
       ]]}
-
+    },
+    "AvaiableFrom" : {
+      "Description" : "Network that the instance is available from",
+      "Value" : { "Ref": "AllowedSubnet" } 
     }
   }
 }
